@@ -1,61 +1,31 @@
 name: Build OpenWrt
-
 on:
-
 push:
-
 branches:
-
 - main # 当提交到 main 分支时触发构建
-
 pull_request:
-
 branches:
-
 - main # 当有 Pull Request 请求时，触发构建
-
 jobs:
-
 build:
-
 runs-on: ubuntu-latest
-
 steps:
-
 - name: Check out code
-
 uses: actions/checkout@v2
-
 - name: Set up environment
-
 run: |
-
 sudo apt-get update
-
 sudo apt-get install -y build-essential git wget unzip
-
 - name: Get OpenWrt feeds
-
 run: |
-
 ./scripts/feeds update -a
-
 ./scripts/feeds install -a
-
 - name: Compile OpenWrt
-
 run: |
-
 make defconfig
-
 make -j$(nproc) # 使用可用的 CPU 核心进行编译
-
 - name: Upload firmware
-
 uses: actions/upload-artifact@v2
-
 with:
-
 name: firmware
-
 path: bin/targets # 调整为实际的固件输出目录
